@@ -11,10 +11,10 @@ index.add('typeIndex', function(key, value) {
   return value.type;
 });
 
-db.put('0', {name: 'cookie', type: 'cat'}, function(err) {
+db.put('0', {type: 'cookie', author: { name: 'cat' }}, function(err) {
   if(err) return console.error(err);
 
-  index.get('typeIndex', 'cat', function(err, key, value) {
+  index.get('typeIndex', 'cookie', function(err, key, value) {
     if(err) return console.error(err);
     console.log("key:", key, "value:", value);
   });
@@ -30,6 +30,32 @@ index.add('foo', {async: true}, function(key, value, cb) {
   // do your async work here 
   cb(null, "index_key");
 });
+```
+
+You can also add simple indexes on properties:
+
+```
+index.add('typeIndex', 'type');
+```
+
+Or even simpler if you want to name them the same as the property:
+
+```
+index.add('type');
+```
+
+Property paths are supported:
+
+```
+index.add('author.name');
+// or
+index.add('myIndex', 'author.name');
+```
+
+and you can create multiple property indexes in one go:
+
+```
+index.add(['type', 'author.index'])
 ```
 
 # API
