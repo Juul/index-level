@@ -149,6 +149,8 @@ function indexer(db, idb, opts) {
     // check for calling convention: .add('indexName', [opts], 'propName')
     } else if(typeof indexBy === 'string') {
       indexFunc = this._propIndexer(indexBy);
+    } else {
+      indexFunc = indexBy;
     }
 
     if(this.indexes[name]) return new Error("Index already exists");
