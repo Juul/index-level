@@ -1,6 +1,6 @@
 {
   "name": "index-level",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple indexing for leveldb",
   "homepage": "http://github.com/biobricks/index-level",
   "repository": {
