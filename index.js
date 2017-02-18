@@ -96,6 +96,8 @@ function indexer(db, idb, opts) {
   this._deleteFromIndex = function(key, cb) {
     cb = cb || this._nullFunc;
     var k, idx;
+
+    // TODO this is broken. Needs to use async
     for(k in this.indexes) {
       idx = this.indexes[k];
 
