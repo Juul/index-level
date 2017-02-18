@@ -168,6 +168,8 @@ Call .rebuild for all indexes.
 
 # TODO
 
+* Handle updates properly (see TODO in source code)
+* Handle non-unique index values (multiple keys per index value)
 * Unit tests
 * Add option to return a leveldown
 

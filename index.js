@@ -67,30 +67,40 @@ function indexer(db, idb, opts) {
     if(!idx.f) return;
     
     if(idx.async) {
-        idx.f(key, value, function(err, indexKey) {
-          if(err) return cb(err);;
-          if(indexKey === undefined || indexKey === null) return cb();
-
-          async.parallel([function(cb) {
-            idx.db.put(indexKey, key, cb);
-          }, function(cb) {
-            idx.rdb.put(key, indexKey, cb);
-          }], cb);
-        })
-      } else {
-        try {
-          var indexKey = idx.f(key, value);
-        } catch(err) {
-          return cb(err);
-        }
-
+      idx.f(key, value, function(err, indexKey) {
+        if(err) return cb(err);;
         if(indexKey === undefined || indexKey === null) return cb();
+        
+        // TODO use rdb to check if this is an update
+        //      rather than a new put.
+        //      then .del the previous .db entry before continuing
+        //      or if indexKey didn't change then we're already done
+
         async.parallel([function(cb) {
           idx.db.put(indexKey, key, cb);
         }, function(cb) {
           idx.rdb.put(key, indexKey, cb);
         }], cb);
+      })
+    } else {
+      try {
+        var indexKey = idx.f(key, value);
+      } catch(err) {
+        return cb(err);
       }
+      
+        // TODO use rdb to check if this is an update
+        //      rather than a new put.
+        //      then .del the previous .db entry before continuing
+        //      or if indexKey didn't change then we're already done
+
+      if(indexKey === undefined || indexKey === null) return cb();
+      async.parallel([function(cb) {
+        idx.db.put(indexKey, key, cb);
+      }, function(cb) {
+        idx.rdb.put(key, indexKey, cb);
+      }], cb);
+    }
   }
 
   this._deleteFromIndex = function(key, cb) {
